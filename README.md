@@ -1,13 +1,92 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# TrackTern
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel web application built with Breeze authentication.
 
-## About Laravel
+## Features
+
+- 🔐 User Authentication (Login/Register)  
+- 📊 Dashboard
+- 👤 User Profile Management
+- 🎨 Modern UI with Tailwind CSS
+- 📱 Responsive Design
+
+## Tech Stack
+
+- **Framework:** Laravel 12.x
+- **Frontend:** Blade Templates, Tailwind CSS, Alpine.js
+- **Database:** MySQL  
+- **Authentication:** Laravel Breeze
+- **Build Tool:** Vite
+
+## Requirements
+
+- PHP 8.2+
+- Composer
+- Node.js & npm
+- MySQL
+
+## Installation
+
+1. Clone the repository
+```bash
+git clone https://github.com/YOUR_USERNAME/tracktern.git
+cd tracktern
+```
+
+2. Install PHP dependencies
+```bash
+composer install
+```
+
+3. Install Node.js dependencies
+```bash
+npm install
+```
+
+4. Copy environment file
+```bash
+cp .env.example .env
+```
+
+5. Generate application key
+```bash
+php artisan key:generate
+```
+
+6. Configure your database in `.env` file
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=tracktern
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+7. Run migrations
+```bash
+php artisan migrate
+```
+
+8. Build assets
+```bash
+npm run dev
+```
+
+## Development
+
+Start the development server:
+```bash
+# Laravel development server
+php artisan serve
+
+# Asset building (in another terminal)
+npm run dev
+```
+
+## Author
+
+Built by Raduel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
