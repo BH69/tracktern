@@ -21,7 +21,57 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
+
+    /**
+     * Role constants.
+     */
+    const ROLE_ADMIN = 'admin';
+    const ROLE_STUDENT = 'student';
+
+    /**
+     * Check if user is an admin.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    /**
+     * Check if user is a student.
+     */
+    public function isStudent(): bool
+    {
+        return $this->role === self::ROLE_STUDENT;
+    }
+
+    /**
+     * Get all available roles.
+     */
+    public static function getRoles(): array
+    {
+        return [
+            self::ROLE_ADMIN,
+            self::ROLE_STUDENT,
+        ];
+    }
+
+    /**
+     * Scope to get only admin users.
+     */
+    public function scopeAdmins($query)
+    {
+        return $query->where('role', self::ROLE_ADMIN);
+    }
+
+    /**
+     * Scope to get only student users.
+     */
+    public function scopeStudents($query)
+    {
+        return $query->where('role', self::ROLE_STUDENT);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
