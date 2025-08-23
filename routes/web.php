@@ -38,6 +38,9 @@ Route::middleware(['auth', 'verified', 'role:student'])
     ->name('student.')
     ->group(function () {
         Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/profile', [StudentDashboardController::class, 'profile'])->name('profile');
+        Route::get('/profile/edit', [StudentDashboardController::class, 'editProfile'])->name('profile.edit');
+        Route::put('/profile', [StudentDashboardController::class, 'updateProfile'])->name('profile.update');
         Route::view('/requirements-checklist', 'student-interns.requirements-checklist.index')->name('requirements-checklist');
         Route::view('/logbook', 'student-interns.logbook.index')->name('logbook');
         Route::view('/documentions-uploads-output', 'student-interns.documentions-uploads-output.index')->name('documentions-uploads-output');

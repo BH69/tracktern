@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>TrackTern - Student Dashboard</title>
+    <title>TrackTern - Student Profile</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -31,7 +31,7 @@
             <div class="flex items-center space-x-4">
                 <h1 class="text-2xl font-bold">TrackTern</h1>
                 <span class="text-purple-200">|</span>
-                <h2 class="text-lg font-semibold">DASHBOARD</h2>
+                <h2 class="text-lg font-semibold">STUDENT PROFILE</h2>
             </div>
             
             <!-- Right: Notifications and Profile -->
@@ -99,7 +99,7 @@
                 <div class="px-4">
                     <ul class="space-y-2">
                         <li>
-                            <a href="{{ route('student.dashboard') }}" class="flex items-center px-4 py-3 text-white rounded-lg font-semibold" style="background-color: #2a3866;">
+                            <a href="{{ route('student.dashboard') }}" class="flex items-center px-4 py-3 text-blue-100 rounded-lg transition-colors" style="color: #e0e7ff;" onmouseover="this.style.backgroundColor='#2a3866'; this.style.color='white';" onmouseout="this.style.backgroundColor=''; this.style.color='#e0e7ff';">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
                                 </svg>
@@ -145,72 +145,110 @@
 
         <!-- Main Content Area -->
         <div class="flex-1 bg-blue-50 p-8">
-            <!-- Welcome Section -->
+            <!-- Header with buttons -->
             <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-800 mb-2">Welcome back, {{ explode(' ', Auth::user()->name)[0] }}!</h1>
-                <p class="text-gray-600">Here's your internship progress overview</p>
+                <div class="flex items-center justify-between">
+                    <h1 class="text-3xl font-bold text-gray-800">Student Profile</h1>
+                    <div class="flex space-x-4">
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                            Your Profile
+                        </button>
+                        <a href="{{ route('student.profile.edit') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                            Edit
+                        </a>
+                    </div>
+                </div>
             </div>
 
-            <!-- Dashboard Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Progress Card -->
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Progress</h3>
-                        <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                        </svg>
-                    </div>
-                    <div class="text-3xl font-bold text-gray-800 mb-2">75%</div>
-                    <p class="text-gray-600">Internship completion</p>
+            <!-- Success Message -->
+            @if(session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+                    {{ session('success') }}
                 </div>
+            @endif
 
-                <!-- Hours Logged Card -->
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Hours Logged</h3>
-                        <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <div class="text-3xl font-bold text-gray-800 mb-2">360/480</div>
-                    <p class="text-gray-600">Total hours</p>
-                </div>
+            <!-- Profile Card -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="p-8">
+                    <div class="flex flex-col lg:flex-row items-start lg:items-center space-y-6 lg:space-y-0 lg:space-x-8">
+                        <!-- Profile Picture -->
+                        <div class="flex-shrink-0">
+                            <div class="w-32 h-32 bg-gray-300 rounded-full flex items-center justify-center">
+                                @if(isset($student) && $student->profile_picture)
+                                    <img src="{{ asset('storage/' . $student->profile_picture) }}" alt="Profile Picture" class="w-32 h-32 rounded-full object-cover">
+                                @else
+                                    <svg class="w-16 h-16 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
+                                @endif
+                            </div>
+                        </div>
 
-                <!-- On-Going Tasks Card -->
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800">On-Going Tasks</h3>
-                        <svg class="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
+                        <!-- Student Details -->
+                        <div class="flex-1 bg-gray-800 text-white p-6 rounded-lg">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-300 mb-1">Name</label>
+                                    <p class="text-lg font-semibold">{{ $student->name ?? Auth::user()->name ?? '' }}</p>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-300 mb-1">Student ID</label>
+                                    <p class="text-lg font-semibold">{{ $student->student_id ?? '' }}</p>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-300 mb-1">Course & Year Level</label>
+                                    <p class="text-lg font-semibold">{{ $student->course ?? '' }}{{ $student->course && $student->year_level ? ' - ' : '' }}{{ $student->year_level ?? '' }}</p>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-300 mb-1">Department</label>
+                                    <p class="text-lg font-semibold">{{ $student->department ?? '' }}</p>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-300 mb-1">Contact Number</label>
+                                    <p class="text-lg font-semibold">{{ $student->contact_number ?? '' }}</p>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-300 mb-1">Email Address</label>
+                                    <p class="text-lg font-semibold">{{ Auth::user()->email ?? '' }}</p>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-300 mb-1">Assigned Company</label>
+                                    <p class="text-lg font-semibold">{{ $student->assigned_company ?? '' }}</p>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-300 mb-1">Company Supervisor</label>
+                                    <p class="text-lg font-semibold">{{ $student->company_supervisor ?? '' }}</p>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-300 mb-1">Required Hours</label>
+                                    <p class="text-lg font-semibold">{{ isset($student->required_hours) ? $student->required_hours . ' hours' : '' }}</p>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-300 mb-1">Hours Completed</label>
+                                    @php
+                                        $completed = $student->hours_completed ?? 0;
+                                        $required = $student->required_hours ?? 480;
+                                        $percentage = $required > 0 ? round(($completed / $required) * 100, 1) : 0;
+                                    @endphp
+                                    <p class="text-lg font-semibold">{{ $completed > 0 || $required > 0 ? $completed . '/' . $required . ' hours (' . $percentage . '%)' : '' }}</p>
+                                    @if($completed > 0 || $required > 0)
+                                    <div class="w-full bg-gray-600 rounded-full h-2 mt-2">
+                                        <div class="bg-green-500 h-2 rounded-full" style="width: {{ $percentage }}%"></div>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="text-3xl font-bold text-gray-800 mb-2">8/10</div>
-                    <p class="text-gray-600">Documents submitted</p>
-                </div>
-
-                <!-- Upcoming Tasks Card -->
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Upcoming Tasks</h3>
-                        <svg class="w-8 h-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a4 4 0 118 0v4m-4 8l-4-4m0 0l4-4m-4 4h16"/>
-                        </svg>
-                    </div>
-                    <div class="text-3xl font-bold text-gray-800 mb-2">3</div>
-                    <p class="text-gray-600">Tasks due this week</p>
-                </div>
-
-                <!-- Evaluation Status Card -->
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Evaluation</h3>
-                        <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-                        </svg>
-                    </div>
-                    <div class="text-3xl font-bold text-gray-800 mb-2">4.2/5</div>
-                    <p class="text-gray-600">Not Started</p>
                 </div>
             </div>
         </div>
