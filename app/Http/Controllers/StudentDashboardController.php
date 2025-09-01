@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\LogbookEntry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -13,8 +14,13 @@ class StudentDashboardController extends Controller
     {
         $user = Auth::user();
         
-        // Try to find student record by user's email or create a default one for demo
+        // Try to find student record by user's name
         $student = Student::where('name', $user->name)->first();
+        
+        // Get actual logged hours from approved logbook entries
+        $actualLoggedHours = LogbookEntry::forUser($user->id)
+            ->approved()
+            ->sum('hours_logged');
         
         // If no student record exists, create a default one for demo purposes
         if (!$student) {
@@ -25,10 +31,14 @@ class StudentDashboardController extends Controller
                 'year' => '4th Year',
                 'coordinator_assigned' => 'Dr. John Smith',
                 'internship_duration' => 12,
-                'required_hours' => 480,
-                'hours_completed' => 360,
+                'required_hours' => 486,
+                'hours_completed' => $actualLoggedHours,
                 'profile_picture' => null,
             ]);
+        } else {
+            // Update student's hours_completed with actual logged hours
+            $student->hours_completed = $actualLoggedHours;
+            $student->save();
         }
         
         // Calculate evaluation status based on progress
@@ -41,26 +51,12 @@ class StudentDashboardController extends Controller
     {
         $user = Auth::user();
         
-        // Try to find student record by user's email or create a default one for demo
+        // Try to find student record by user's email
         $student = Student::where('name', $user->name)->first();
         
-        // If no student record exists, create a default one for demo purposes
+        // If no student record exists, pass null to let the view handle empty states
         if (!$student) {
-            $student = new Student([
-                'student_id' => 'DEMO-001',
-                'name' => $user->name,
-                'program' => 'Computer Science',
-                'year' => '4th Year',
-                'coordinator_assigned' => 'Dr. John Smith',
-                'internship_duration' => 12,
-                'required_hours' => 480,
-                'hours_completed' => 360,
-                'profile_picture' => null,
-                'department' => 'College of Computer Studies',
-                'contact_number' => null,
-                'assigned_company' => 'TechCorp Solutions Inc.',
-                'company_supervisor' => 'Ms. Jane Smith',
-            ]);
+            $student = null;
         }
         
         return view('student-interns.profile.index', compact('student'));
@@ -70,26 +66,27 @@ class StudentDashboardController extends Controller
     {
         $user = Auth::user();
         
-        // Find or create student record
+        // Find existing student record
         $student = Student::where('name', $user->name)->first();
         
+        // If no student record exists, create a new empty instance
         if (!$student) {
             $student = new Student([
                 'name' => $user->name,
-                'student_id' => '',
-                'program' => '',
-                'course' => '',
-                'year' => '',
-                'year_level' => '',
-                'coordinator_assigned' => '',
-                'internship_duration' => 0,
-                'required_hours' => 0,
+                'student_id' => null,
+                'program' => null,
+                'course' => null,
+                'year' => null,
+                'year_level' => null,
+                'coordinator_assigned' => null,
+                'internship_duration' => null,
+                'required_hours' => null,
                 'hours_completed' => 0,
                 'profile_picture' => null,
-                'department' => '',
-                'contact_number' => '',
-                'assigned_company' => '',
-                'company_supervisor' => '',
+                'department' => null,
+                'contact_number' => null,
+                'assigned_company' => null,
+                'company_supervisor' => null,
             ]);
         }
         
@@ -105,14 +102,14 @@ class StudentDashboardController extends Controller
             'first_name' => 'required|string|max:255',
             'middle_name' => 'nullable|string|max:255',
             'last_name' => 'required|string|max:255',
-            'student_id' => 'required|string|max:255',
+            'student_id' => 'nullable|string|max:255',
             'contact_number' => 'nullable|string|max:255',
             'course' => 'nullable|string|max:255',
             'department' => 'nullable|string|max:255',
             'year_level' => 'nullable|string|in:1st Year,2nd Year,3rd Year,4th Year,5th Year',
             'assigned_company' => 'nullable|string|max:255',
             'company_supervisor' => 'nullable|string|max:255',
-            'required_hours' => 'nullable|integer|min:0',
+            'required_hours' => 'nullable|integer|in:240,486',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -122,10 +119,10 @@ class StudentDashboardController extends Controller
         if (!$student) {
             $student = new Student();
             $student->name = $user->name;
-            $student->coordinator_assigned = '';
-            $student->internship_duration = 0;
+            $student->coordinator_assigned = null;
+            $student->internship_duration = null;
             $student->hours_completed = 0;
-            $student->year = '';
+            $student->year = null;
         }
 
         // Handle profile picture upload
@@ -144,17 +141,17 @@ class StudentDashboardController extends Controller
         $fullName = trim($request->first_name . ' ' . $request->middle_name . ' ' . $request->last_name);
         $fullName = preg_replace('/\s+/', ' ', $fullName); // Remove extra spaces
 
-        // Update student information
+        // Update student information - only save non-empty values
         $student->name = $fullName;
-        $student->student_id = $request->student_id;
-        $student->contact_number = $request->contact_number;
-        $student->course = $request->course;
-        $student->program = $request->course; // Use course as program
-        $student->department = $request->department;
-        $student->year_level = $request->year_level;
-        $student->assigned_company = $request->assigned_company;
-        $student->company_supervisor = $request->company_supervisor;
-        $student->required_hours = $request->required_hours;
+        $student->student_id = $request->student_id ?: null;
+        $student->contact_number = $request->contact_number ?: null;
+        $student->course = $request->course ?: null;
+        $student->program = $request->course ?: null; // Use course as program
+        $student->department = $request->department ?: null;
+        $student->year_level = $request->year_level ?: null;
+        $student->assigned_company = $request->assigned_company ?: null;
+        $student->company_supervisor = $request->company_supervisor ?: null;
+        $student->required_hours = $request->required_hours ?: null;
 
         $student->save();
 

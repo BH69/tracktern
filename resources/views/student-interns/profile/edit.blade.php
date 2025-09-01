@@ -115,6 +115,14 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{ route('student.assigned-tasks') }}" class="flex items-center px-4 py-3 text-blue-100 rounded-lg transition-colors" style="color: #e0e7ff;" onmouseover="this.style.backgroundColor='#2a3866'; this.style.color='white';" onmouseout="this.style.backgroundColor=''; this.style.color='#e0e7ff';">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                                </svg>
+                                Assigned Tasks
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ route('student.logbook') }}" class="flex items-center px-4 py-3 text-blue-100 rounded-lg transition-colors" style="color: #e0e7ff;" onmouseover="this.style.backgroundColor='#2a3866'; this.style.color='white';" onmouseout="this.style.backgroundColor=''; this.style.color='#e0e7ff';">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
@@ -233,16 +241,17 @@
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                             <div>
-                                <label for="student_id" class="block text-sm font-medium text-gray-700 mb-2">Student ID *</label>
-                                <input type="text" name="student_id" id="student_id" required
-                                       value="{{ old('student_id', $student->student_id ?? '') }}"
+                                <label for="student_id" class="block text-sm font-medium text-gray-700 mb-2">Student ID</label>
+                                <input type="text" name="student_id" id="student_id"
+                                       value="{{ old('student_id', $student && $student->student_id ? $student->student_id : '') }}"
+                                       placeholder="e.g., 2025-00001"
                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
                             
                             <div>
                                 <label for="contact_number" class="block text-sm font-medium text-gray-700 mb-2">Contact Number</label>
                                 <input type="text" name="contact_number" id="contact_number"
-                                       value="{{ old('contact_number', $student->contact_number ?? '') }}"
+                                       value="{{ old('contact_number', $student && $student->contact_number ? $student->contact_number : '') }}"
                                        placeholder="+63 912 345 6789"
                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
@@ -256,7 +265,7 @@
                             <div>
                                 <label for="course" class="block text-sm font-medium text-gray-700 mb-2">Course/Program</label>
                                 <input type="text" name="course" id="course"
-                                       value="{{ old('course', $student->course ?? '') }}"
+                                       value="{{ old('course', $student && $student->course ? $student->course : '') }}"
                                        placeholder="Bachelor of Science in Information Technology"
                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
@@ -264,7 +273,7 @@
                             <div>
                                 <label for="department" class="block text-sm font-medium text-gray-700 mb-2">Department</label>
                                 <input type="text" name="department" id="department"
-                                       value="{{ old('department', $student->department ?? '') }}"
+                                       value="{{ old('department', $student && $student->department ? $student->department : '') }}"
                                        placeholder="College of Computer Studies"
                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
@@ -274,11 +283,11 @@
                                 <select name="year_level" id="year_level" 
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     <option value="">Select Year Level</option>
-                                    <option value="1st Year" {{ old('year_level', $student->year_level ?? '') == '1st Year' ? 'selected' : '' }}>1st Year</option>
-                                    <option value="2nd Year" {{ old('year_level', $student->year_level ?? '') == '2nd Year' ? 'selected' : '' }}>2nd Year</option>
-                                    <option value="3rd Year" {{ old('year_level', $student->year_level ?? '') == '3rd Year' ? 'selected' : '' }}>3rd Year</option>
-                                    <option value="4th Year" {{ old('year_level', $student->year_level ?? '') == '4th Year' ? 'selected' : '' }}>4th Year</option>
-                                    <option value="5th Year" {{ old('year_level', $student->year_level ?? '') == '5th Year' ? 'selected' : '' }}>5th Year</option>
+                                    <option value="1st Year" {{ old('year_level', $student && $student->year_level ? $student->year_level : '') == '1st Year' ? 'selected' : '' }}>1st Year</option>
+                                    <option value="2nd Year" {{ old('year_level', $student && $student->year_level ? $student->year_level : '') == '2nd Year' ? 'selected' : '' }}>2nd Year</option>
+                                    <option value="3rd Year" {{ old('year_level', $student && $student->year_level ? $student->year_level : '') == '3rd Year' ? 'selected' : '' }}>3rd Year</option>
+                                    <option value="4th Year" {{ old('year_level', $student && $student->year_level ? $student->year_level : '') == '4th Year' ? 'selected' : '' }}>4th Year</option>
+                                    <option value="5th Year" {{ old('year_level', $student && $student->year_level ? $student->year_level : '') == '5th Year' ? 'selected' : '' }}>5th Year</option>
                                 </select>
                             </div>
                         </div>
@@ -291,7 +300,7 @@
                             <div>
                                 <label for="assigned_company" class="block text-sm font-medium text-gray-700 mb-2">Assigned Company</label>
                                 <input type="text" name="assigned_company" id="assigned_company"
-                                       value="{{ old('assigned_company', $student->assigned_company ?? '') }}"
+                                       value="{{ old('assigned_company', $student && $student->assigned_company ? $student->assigned_company : '') }}"
                                        placeholder="Tech Solutions Inc."
                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
@@ -299,17 +308,19 @@
                             <div>
                                 <label for="company_supervisor" class="block text-sm font-medium text-gray-700 mb-2">Company Supervisor</label>
                                 <input type="text" name="company_supervisor" id="company_supervisor"
-                                       value="{{ old('company_supervisor', $student->company_supervisor ?? '') }}"
+                                       value="{{ old('company_supervisor', $student && $student->company_supervisor ? $student->company_supervisor : '') }}"
                                        placeholder="Ms. Jane Smith"
                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
                             
                             <div class="md:col-span-2">
                                 <label for="required_hours" class="block text-sm font-medium text-gray-700 mb-2">Required Hours</label>
-                                <input type="number" name="required_hours" id="required_hours" min="0"
-                                       value="{{ old('required_hours', $student->required_hours ?? '') }}"
-                                       placeholder="480"
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <select name="required_hours" id="required_hours" 
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="">Select Required Hours</option>
+                                    <option value="240" {{ old('required_hours', $student && $student->required_hours ? $student->required_hours : '') == '240' ? 'selected' : '' }}>240 hours</option>
+                                    <option value="486" {{ old('required_hours', $student && $student->required_hours ? $student->required_hours : '') == '486' ? 'selected' : '' }}>486 hours</option>
+                                </select>
                             </div>
                         </div>
                     </div>

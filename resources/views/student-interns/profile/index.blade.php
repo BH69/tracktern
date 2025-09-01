@@ -115,6 +115,14 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{ route('student.assigned-tasks') }}" class="flex items-center px-4 py-3 text-blue-100 rounded-lg transition-colors" style="color: #e0e7ff;" onmouseover="this.style.backgroundColor='#2a3866'; this.style.color='white';" onmouseout="this.style.backgroundColor=''; this.style.color='#e0e7ff';">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                                </svg>
+                                Assigned Tasks
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ route('student.logbook') }}" class="flex items-center px-4 py-3 text-blue-100 rounded-lg transition-colors" style="color: #e0e7ff;" onmouseover="this.style.backgroundColor='#2a3866'; this.style.color='white';" onmouseout="this.style.backgroundColor=''; this.style.color='#e0e7ff';">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
@@ -150,9 +158,6 @@
                 <div class="flex items-center justify-between">
                     <h1 class="text-3xl font-bold text-gray-800">Student Profile</h1>
                     <div class="flex space-x-4">
-                        <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
-                            Your Profile
-                        </button>
                         <a href="{{ route('student.profile.edit') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
                             Edit
                         </a>
@@ -189,61 +194,124 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label class="block text-sm font-bold text-gray-300 mb-1">Name</label>
-                                    <p class="text-lg font-semibold">{{ $student->name ?? Auth::user()->name ?? '' }}</p>
+                                    <p class="text-lg font-semibold">
+                                        @if(isset($student) && $student->name)
+                                            {{ $student->name }}
+                                        @elseif(Auth::user()->name)
+                                            {{ Auth::user()->name }}
+                                        @else
+                                            <span class="text-gray-400 italic">Not provided</span>
+                                        @endif
+                                    </p>
                                 </div>
                                 
                                 <div>
                                     <label class="block text-sm font-bold text-gray-300 mb-1">Student ID</label>
-                                    <p class="text-lg font-semibold">{{ $student->student_id ?? '' }}</p>
+                                    <p class="text-lg font-semibold">
+                                        @if(isset($student) && $student->student_id)
+                                            {{ $student->student_id }}
+                                        @else
+                                            <span class="text-gray-400 italic">Not provided</span>
+                                        @endif
+                                    </p>
                                 </div>
                                 
                                 <div>
                                     <label class="block text-sm font-bold text-gray-300 mb-1">Course & Year Level</label>
-                                    <p class="text-lg font-semibold">{{ $student->course ?? '' }}{{ $student->course && $student->year_level ? ' - ' : '' }}{{ $student->year_level ?? '' }}</p>
+                                    <p class="text-lg font-semibold">
+                                        @if(isset($student) && ($student->course || $student->year_level))
+                                            {{ $student->course }}{{ $student->course && $student->year_level ? ' - ' : '' }}{{ $student->year_level }}
+                                        @else
+                                            <span class="text-gray-400 italic">Not provided</span>
+                                        @endif
+                                    </p>
                                 </div>
                                 
                                 <div>
                                     <label class="block text-sm font-bold text-gray-300 mb-1">Department</label>
-                                    <p class="text-lg font-semibold">{{ $student->department ?? '' }}</p>
+                                    <p class="text-lg font-semibold">
+                                        @if(isset($student) && $student->department)
+                                            {{ $student->department }}
+                                        @else
+                                            <span class="text-gray-400 italic">Not provided</span>
+                                        @endif
+                                    </p>
                                 </div>
                                 
                                 <div>
                                     <label class="block text-sm font-bold text-gray-300 mb-1">Contact Number</label>
-                                    <p class="text-lg font-semibold">{{ $student->contact_number ?? '' }}</p>
+                                    <p class="text-lg font-semibold">
+                                        @if(isset($student) && $student->contact_number)
+                                            {{ $student->contact_number }}
+                                        @else
+                                            <span class="text-gray-400 italic">Not provided</span>
+                                        @endif
+                                    </p>
                                 </div>
                                 
                                 <div>
                                     <label class="block text-sm font-bold text-gray-300 mb-1">Email Address</label>
-                                    <p class="text-lg font-semibold">{{ Auth::user()->email ?? '' }}</p>
+                                    <p class="text-lg font-semibold">
+                                        @if(Auth::user()->email)
+                                            {{ Auth::user()->email }}
+                                        @else
+                                            <span class="text-gray-400 italic">Not provided</span>
+                                        @endif
+                                    </p>
                                 </div>
                                 
                                 <div>
                                     <label class="block text-sm font-bold text-gray-300 mb-1">Assigned Company</label>
-                                    <p class="text-lg font-semibold">{{ $student->assigned_company ?? '' }}</p>
+                                    <p class="text-lg font-semibold">
+                                        @if(isset($student) && $student->assigned_company)
+                                            {{ $student->assigned_company }}
+                                        @else
+                                            <span class="text-gray-400 italic">Not provided</span>
+                                        @endif
+                                    </p>
                                 </div>
                                 
                                 <div>
                                     <label class="block text-sm font-bold text-gray-300 mb-1">Company Supervisor</label>
-                                    <p class="text-lg font-semibold">{{ $student->company_supervisor ?? '' }}</p>
+                                    <p class="text-lg font-semibold">
+                                        @if(isset($student) && $student->company_supervisor)
+                                            {{ $student->company_supervisor }}
+                                        @else
+                                            <span class="text-gray-400 italic">Not provided</span>
+                                        @endif
+                                    </p>
                                 </div>
                                 
                                 <div>
                                     <label class="block text-sm font-bold text-gray-300 mb-1">Required Hours</label>
-                                    <p class="text-lg font-semibold">{{ isset($student->required_hours) ? $student->required_hours . ' hours' : '' }}</p>
+                                    <p class="text-lg font-semibold">
+                                        @if(isset($student) && $student->required_hours)
+                                            {{ $student->required_hours }} hours
+                                        @else
+                                            <span class="text-gray-400 italic">Not set</span>
+                                        @endif
+                                    </p>
                                 </div>
                                 
                                 <div>
                                     <label class="block text-sm font-bold text-gray-300 mb-1">Hours Completed</label>
                                     @php
-                                        $completed = $student->hours_completed ?? 0;
-                                        $required = $student->required_hours ?? 480;
-                                        $percentage = $required > 0 ? round(($completed / $required) * 100, 1) : 0;
+                                        $completed = isset($student) ? $student->hours_completed : null;
+                                        $required = isset($student) ? $student->required_hours : null;
+                                        $showProgress = $completed !== null && $required !== null && $required > 0;
+                                        $percentage = $showProgress ? round(($completed / $required) * 100, 1) : 0;
                                     @endphp
-                                    <p class="text-lg font-semibold">{{ $completed > 0 || $required > 0 ? $completed . '/' . $required . ' hours (' . $percentage . '%)' : '' }}</p>
-                                    @if($completed > 0 || $required > 0)
-                                    <div class="w-full bg-gray-600 rounded-full h-2 mt-2">
-                                        <div class="bg-green-500 h-2 rounded-full" style="width: {{ $percentage }}%"></div>
-                                    </div>
+                                    <p class="text-lg font-semibold">
+                                        @if($showProgress)
+                                            {{ $completed }}/{{ $required }} hours ({{ $percentage }}%)
+                                        @else
+                                            <span class="text-gray-400 italic">Not tracked</span>
+                                        @endif
+                                    </p>
+                                    @if($showProgress)
+                                        <div class="w-full bg-gray-600 rounded-full h-2 mt-2">
+                                            <div class="bg-green-500 h-2 rounded-full" style="width: {{ $percentage }}%"></div>
+                                        </div>
                                     @endif
                                 </div>
                             </div>

@@ -74,6 +74,30 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the logbook entries for the user
+     */
+    public function logbookEntries()
+    {
+        return $this->hasMany(LogbookEntry::class);
+    }
+
+    /**
+     * Get today's logbook entry for the user
+     */
+    public function todayLogbookEntry()
+    {
+        return $this->hasOne(LogbookEntry::class)->whereDate('log_date', today());
+    }
+
+    /**
+     * Get the student profile for this user
+     */
+    public function student()
+    {
+        return $this->hasOne(Student::class, 'name', 'name');
+    }
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>

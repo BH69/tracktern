@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>TrackTern - Documentation & Output Uploads</title>
+    <title>TrackTern - Internship Output Archive</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -12,6 +12,9 @@
     
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <!-- Alpine.js for dropdown functionality -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
     <style>
         body {
@@ -28,7 +31,7 @@
             <div class="flex items-center space-x-4">
                 <h1 class="text-2xl font-bold">TrackTern</h1>
                 <span class="text-purple-200">|</span>
-                <h2 class="text-lg font-semibold">DOCUMENTATION & OUTPUT UPLOADS</h2>
+                <h2 class="text-lg font-semibold">INTERNSHIP OUTPUT ARCHIVE</h2>
             </div>
             
             <!-- Right: Notifications and Profile -->
@@ -41,23 +44,46 @@
                     <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
                 </button>
                 
-                <!-- Profile -->
-                <div class="relative">
-                    <button class="flex items-center space-x-2 p-2 hover:bg-purple-800 rounded-lg transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
+                <!-- Profile Dropdown -->
+                <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open" class="flex items-center space-x-2 p-2 hover:bg-purple-800 rounded-lg transition-colors">
+                        <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center border-2 border-white">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                        </div>
                         <span class="hidden md:block">{{ Auth::user()->name }}</span>
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
                     </button>
+                    
+                    <!-- Dropdown Menu -->
+                    <div x-show="open" @click.away="open = false" 
+                         x-transition:enter="transition ease-out duration-100"
+                         x-transition:enter-start="transform opacity-0 scale-95"
+                         x-transition:enter-end="transform opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-75"
+                         x-transition:leave-start="transform opacity-100 scale-100"
+                         x-transition:leave-end="transform opacity-0 scale-95"
+                         class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                        <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                            Profile
+                        </a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                </svg>
+                                Logout
+                            </button>
+                        </form>
+                    </div>
                 </div>
-                
-                <!-- Logout -->
-                <form method="POST" action="{{ route('logout') }}" class="inline">
-                    @csrf
-                    <button type="submit" class="text-purple-200 hover:text-white px-3 py-2 hover:bg-purple-800 rounded-lg transition-colors">
-                        Logout
-                    </button>
-                </form>
             </div>
         </div>
     </div>
@@ -74,6 +100,14 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
                                 </svg>
                                 Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('coordinators.create-intern') }}" class="flex items-center px-4 py-3 text-green-100 rounded-lg transition-colors" style="color: #bbf7d0;" onmouseover="this.style.backgroundColor='#2a3866'; this.style.color='white';" onmouseout="this.style.backgroundColor=''; this.style.color='#bbf7d0';">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                Create Intern
                             </a>
                         </li>
                         <li>
@@ -109,11 +143,11 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('coordinators.documentation-output-uploads') }}" class="flex items-center px-4 py-3 text-white rounded-lg font-semibold" style="background-color: #2a3866;">
+                            <a href="{{ route('coordinators.internship-output-archive') }}" class="flex items-center px-4 py-3 text-white rounded-lg font-semibold" style="background-color: #2a3866;">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                                 </svg>
-                                Documentation & Output Uploads
+                                Internship Output Archive
                             </a>
                         </li>
                         <li>
@@ -134,7 +168,7 @@
             <!-- Welcome Message -->
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-800 mb-2">
-                    DOCUMENTATION & OUTPUT UPLOADS
+                    INTERNSHIP OUTPUT ARCHIVE
                 </h1>
                 <p class="text-gray-600">Manage intern documentation and project output submissions</p>
             </div>
@@ -145,7 +179,7 @@
                     <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                     </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">Documentation & Output Uploads</h3>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Internship Output Archive</h3>
                     <p class="mt-1 text-sm text-gray-500">Content for this section will be implemented here.</p>
                 </div>
             </div>

@@ -115,6 +115,14 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{ route('student.assigned-tasks') }}" class="flex items-center px-4 py-3 text-blue-100 rounded-lg transition-colors" style="color: #e0e7ff;" onmouseover="this.style.backgroundColor='#2a3866'; this.style.color='white';" onmouseout="this.style.backgroundColor=''; this.style.color='#e0e7ff';">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                                </svg>
+                                Assigned Tasks
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ route('student.logbook') }}" class="flex items-center px-4 py-3 text-blue-100 rounded-lg transition-colors" style="color: #e0e7ff;" onmouseover="this.style.backgroundColor='#2a3866'; this.style.color='white';" onmouseout="this.style.backgroundColor=''; this.style.color='#e0e7ff';">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
@@ -161,21 +169,43 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                         </svg>
                     </div>
-                    <div class="text-3xl font-bold text-gray-800 mb-2">75%</div>
+                    <div class="text-3xl font-bold text-gray-800 mb-2">
+                        @if($student && $student->required_hours > 0)
+                            {{ number_format(($student->hours_completed / $student->required_hours) * 100, 1) }}%
+                        @else
+                            0%
+                        @endif
+                    </div>
                     <p class="text-gray-600">Internship completion</p>
                 </div>
 
                 <!-- Hours Logged Card -->
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Hours Logged</h3>
-                        <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
+                <a href="{{ route('student.logbook') }}" class="block transform hover:scale-105 transition-transform duration-200 group">
+                    <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200 cursor-pointer border-2 border-transparent hover:border-blue-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">Hours Logged</h3>
+                            <svg class="w-8 h-8 text-blue-500 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div class="text-3xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">
+                            @if($student)
+                                {{ $student->hours_completed ?? 0 }}/{{ $student->required_hours ?? 480 }}
+                            @else
+                                0/480
+                            @endif
+                        </div>
+                        <p class="text-gray-600 flex items-center group-hover:text-blue-500 transition-colors">
+                            Total hours
+                            <svg class="w-4 h-4 ml-2 text-blue-500 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </p>
+                        <div class="mt-2 text-xs text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                            Click to view daily logbook →
+                        </div>
                     </div>
-                    <div class="text-3xl font-bold text-gray-800 mb-2">360/480</div>
-                    <p class="text-gray-600">Total hours</p>
-                </div>
+                </a>
 
                 <!-- On-Going Tasks Card -->
                 <div class="bg-white rounded-lg shadow-md p-6">

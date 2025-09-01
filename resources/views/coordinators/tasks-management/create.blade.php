@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>TrackTern - Requirements Management</title>
+    <title>TrackTern - Create New Task</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -31,7 +31,7 @@
             <div class="flex items-center space-x-4">
                 <h1 class="text-2xl font-bold">TrackTern</h1>
                 <span class="text-purple-200">|</span>
-                <h2 class="text-lg font-semibold">REQUIREMENTS MANAGEMENT</h2>
+                <h2 class="text-lg font-semibold">CREATE NEW TASK</h2>
             </div>
             
             <!-- Right: Notifications and Profile -->
@@ -119,7 +119,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('coordinators.requirements-management') }}" class="flex items-center px-4 py-3 text-white rounded-lg font-semibold" style="background-color: #2a3866;">
+                            <a href="{{ route('coordinators.requirements-management') }}" class="flex items-center px-4 py-3 text-blue-100 rounded-lg transition-colors" style="color: #e0e7ff;" onmouseover="this.style.backgroundColor='#2a3866'; this.style.color='white';" onmouseout="this.style.backgroundColor=''; this.style.color='#e0e7ff';">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                 </svg>
@@ -127,7 +127,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('coordinators.tasks-management') }}" class="flex items-center px-4 py-3 text-blue-100 rounded-lg transition-colors" style="color: #e0e7ff;" onmouseover="this.style.backgroundColor='#2a3866'; this.style.color='white';" onmouseout="this.style.backgroundColor=''; this.style.color='#e0e7ff';">
+                            <a href="{{ route('coordinators.tasks-management') }}" class="flex items-center px-4 py-3 text-white rounded-lg font-semibold" style="background-color: #2a3866;">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                                 </svg>
@@ -165,84 +165,139 @@
 
         <!-- Main Content Area -->
         <div class="flex-1 bg-yellow-50 p-8">
-            <!-- Top Section with Tab and Search -->
-            <div class="bg-gray-800 rounded-lg p-4 mb-6">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <!-- Tab -->
-                    <div class="flex">
-                        <div class="bg-white text-gray-800 px-6 py-2 rounded-full font-semibold text-sm">
-                            STUDENT INTERNS
-                        </div>
+            <!-- Header -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-800 mb-2">Create New Task</h1>
+                        <p class="text-gray-600">Assign a new task to an intern</p>
                     </div>
-                    
-                    <!-- Search Bar -->
-                    <div class="relative w-full md:w-auto">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                            </svg>
-                        </div>
-                        <input type="text" class="block w-full md:w-80 pl-10 pr-3 py-2 border border-gray-300 rounded-full leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-purple-500 focus:border-purple-500 text-sm" placeholder="Search student interns...">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Requirements Table -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <!-- Table Header -->
-                <div class="bg-gray-50 px-6 py-4">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div class="bg-purple-600 text-white px-4 py-2 rounded-full text-center font-semibold text-sm">
-                            Name of Student
-                        </div>
-                        <div class="bg-purple-600 text-white px-4 py-2 rounded-full text-center font-semibold text-sm">
-                            Course
-                        </div>
-                        <div class="bg-purple-600 text-white px-4 py-2 rounded-full text-center font-semibold text-sm">
-                            Form Submitted
-                        </div>
-                        <div class="bg-purple-600 text-white px-4 py-2 rounded-full text-center font-semibold text-sm">
-                            Actions
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Table Content -->
-                <div class="divide-y divide-gray-200">
-                    <!-- Empty state - will be populated when database is integrated -->
-                    <div class="px-6 py-12 text-center">
-                        <svg class="w-12 h-12 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    <a href="{{ route('coordinators.tasks-management') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
-                        <h3 class="text-lg font-medium text-gray-900 mb-2">No submissions yet</h3>
-                        <p class="text-gray-500">Student intern submissions will appear here once the database is integrated.</p>
-                    </div>
-                </div>
-
-                <!-- Pagination -->
-                <div class="bg-gray-50 px-6 py-3 border-t border-gray-200">
-                    <div class="flex items-center justify-between">
-                        <div class="text-sm text-gray-500">
-                            No results to display
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-100 disabled:opacity-50" disabled>
-                                Previous
-                            </button>
-                            <button class="px-3 py-1 text-sm bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50" disabled>
-                                1
-                            </button>
-                            <button class="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-100 disabled:opacity-50" disabled>
-                                Next
-                            </button>
-                        </div>
-                    </div>
+                        <span>Back to Tasks</span>
+                    </a>
                 </div>
             </div>
+
+            <!-- Success Message -->
+            @if(session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <!-- Error Messages -->
+            @if($errors->any())
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                    <ul class="list-disc list-inside">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <!-- Create Task Form -->
+            <form method="POST" action="{{ route('coordinators.tasks-management.store') }}" enctype="multipart/form-data" class="bg-white rounded-xl shadow-lg overflow-hidden">
+                @csrf
+                
+                <div class="p-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- Date -->
+                        <div>
+                            <label for="date" class="block text-sm font-medium text-gray-700 mb-2">Date *</label>
+                            <input type="date" name="date" id="date" required
+                                   value="{{ old('date', date('Y-m-d')) }}"
+                                   min="{{ date('Y-m-d') }}"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        </div>
+
+                        <!-- Assigned To (Student Dropdown) -->
+                        <div>
+                            <label for="assigned_to" class="block text-sm font-medium text-gray-700 mb-2">Assigned To *</label>
+                            <select name="assigned_to" id="assigned_to" required
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="">Select Student</option>
+                                @isset($students)
+                                    @foreach($students as $student)
+                                        <option value="{{ $student->id }}" {{ old('assigned_to') == $student->id ? 'selected' : '' }}>
+                                            {{ $student->name }}
+                                        </option>
+                                    @endforeach
+                                @else
+                                    <!-- Sample students - replace with dynamic data -->
+                                    <option value="1" {{ old('assigned_to') == '1' ? 'selected' : '' }}>John Doe</option>
+                                    <option value="2" {{ old('assigned_to') == '2' ? 'selected' : '' }}>Sarah Johnson</option>
+                                    <option value="3" {{ old('assigned_to') == '3' ? 'selected' : '' }}>Alex Martinez</option>
+                                    <option value="4" {{ old('assigned_to') == '4' ? 'selected' : '' }}>Maria Rodriguez</option>
+                                    <option value="5" {{ old('assigned_to') == '5' ? 'selected' : '' }}>David Kim</option>
+                                @endisset
+                            </select>
+                        </div>
+
+                        <!-- Company -->
+                        <div>
+                            <label for="company" class="block text-sm font-medium text-gray-700 mb-2">Company *</label>
+                            <input type="text" name="company" id="company" required
+                                   value="{{ old('company') }}"
+                                   placeholder="e.g., TechCorp Inc."
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        </div>
+
+                        <!-- Supervisor -->
+                        <div>
+                            <label for="supervisor" class="block text-sm font-medium text-gray-700 mb-2">Supervisor *</label>
+                            <input type="text" name="supervisor" id="supervisor" required
+                                   value="{{ old('supervisor') }}"
+                                   placeholder="e.g., Jane Smith"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        </div>
+
+                        <!-- Due Date -->
+                        <div>
+                            <label for="due_date" class="block text-sm font-medium text-gray-700 mb-2">Due Date *</label>
+                            <input type="date" name="due_date" id="due_date" required
+                                   value="{{ old('due_date') }}"
+                                   min="{{ date('Y-m-d') }}"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        </div>
+
+                        <!-- Task File Attachment -->
+                        <div>
+                            <label for="task_file" class="block text-sm font-medium text-gray-700 mb-2">Task File Attachment</label>
+                            <input type="file" name="task_file" id="task_file" 
+                                   accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+                            <p class="text-xs text-gray-500 mt-1">Supported formats: PDF, DOC, DOCX, TXT, JPG, PNG, GIF (Max: 10MB)</p>
+                        </div>
+
+                        <!-- Task Assigned (Full Width) -->
+                        <div class="md:col-span-2">
+                            <label for="task_assigned" class="block text-sm font-medium text-gray-700 mb-2">Task Assigned *</label>
+                            <textarea name="task_assigned" id="task_assigned" required rows="4"
+                                      placeholder="Describe the task to be assigned..."
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">{{ old('task_assigned') }}</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200 mt-8">
+                        <a href="{{ route('coordinators.tasks-management') }}" 
+                           class="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-semibold">
+                            Cancel
+                        </a>
+                        <button type="submit" 
+                                class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold">
+                            Create Task
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
 </body>
 </html>
-
-

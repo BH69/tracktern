@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>TrackTern - Intern Progress Tracker</title>
+    <title>TrackTern - Create Intern</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -12,6 +12,9 @@
     
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <!-- Alpine.js for dropdown functionality -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
     <style>
         body {
@@ -28,7 +31,7 @@
             <div class="flex items-center space-x-4">
                 <h1 class="text-2xl font-bold">TrackTern</h1>
                 <span class="text-purple-200">|</span>
-                <h2 class="text-lg font-semibold">INTERN PROGRESS TRACKER</h2>
+                <h2 class="text-lg font-semibold">CREATE USER</h2>
             </div>
             
             <!-- Right: Notifications and Profile -->
@@ -41,23 +44,46 @@
                     <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
                 </button>
                 
-                <!-- Profile -->
-                <div class="relative">
-                    <button class="flex items-center space-x-2 p-2 hover:bg-purple-800 rounded-lg transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
+                <!-- Profile Dropdown -->
+                <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open" class="flex items-center space-x-2 p-2 hover:bg-purple-800 rounded-lg transition-colors">
+                        <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center border-2 border-white">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                        </div>
                         <span class="hidden md:block">{{ Auth::user()->name }}</span>
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
                     </button>
+                    
+                    <!-- Dropdown Menu -->
+                    <div x-show="open" @click.away="open = false" 
+                         x-transition:enter="transition ease-out duration-100"
+                         x-transition:enter-start="transform opacity-0 scale-95"
+                         x-transition:enter-end="transform opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-75"
+                         x-transition:leave-start="transform opacity-100 scale-100"
+                         x-transition:leave-end="transform opacity-0 scale-95"
+                         class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                        <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                            Profile
+                        </a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                </svg>
+                                Logout
+                            </button>
+                        </form>
+                    </div>
                 </div>
-                
-                <!-- Logout -->
-                <form method="POST" action="{{ route('logout') }}" class="inline">
-                    @csrf
-                    <button type="submit" class="text-purple-200 hover:text-white px-3 py-2 hover:bg-purple-800 rounded-lg transition-colors">
-                        Logout
-                    </button>
-                </form>
             </div>
         </div>
     </div>
@@ -77,7 +103,15 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('coordinators.intern-progress-tracker') }}" class="flex items-center px-4 py-3 text-white rounded-lg font-semibold" style="background-color: #2a3866;">
+                            <a href="{{ route('coordinators.create-intern') }}" class="flex items-center px-4 py-3 text-white rounded-lg font-semibold" style="background-color: #2a3866;">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                Create Intern
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('coordinators.intern-progress-tracker') }}" class="flex items-center px-4 py-3 text-blue-100 rounded-lg transition-colors" style="color: #e0e7ff;" onmouseover="this.style.backgroundColor='#2a3866'; this.style.color='white';" onmouseout="this.style.backgroundColor=''; this.style.color='#e0e7ff';">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                                 </svg>
@@ -109,11 +143,11 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('coordinators.documentation-output-uploads') }}" class="flex items-center px-4 py-3 text-blue-100 rounded-lg transition-colors" style="color: #e0e7ff;" onmouseover="this.style.backgroundColor='#2a3866'; this.style.color='white';" onmouseout="this.style.backgroundColor=''; this.style.color='#e0e7ff';">
+                            <a href="{{ route('coordinators.internship-output-archive') }}" class="flex items-center px-4 py-3 text-blue-100 rounded-lg transition-colors" style="color: #e0e7ff;" onmouseover="this.style.backgroundColor='#2a3866'; this.style.color='white';" onmouseout="this.style.backgroundColor=''; this.style.color='#e0e7ff';">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                                 </svg>
-                                Documentation & Output Uploads
+                                Internship Output Archive
                             </a>
                         </li>
                         <li>
@@ -131,67 +165,52 @@
 
         <!-- Main Content Area -->
         <div class="flex-1 bg-yellow-50 p-8">
-            <!-- Top Section with Tab and Search -->
-            <div class="bg-gray-800 rounded-lg p-6 mb-6 shadow-lg">
-                <div class="flex items-center justify-between">
-                    <!-- Left: Tab -->
-                    <div class="flex items-center">
-                        <div class="bg-purple-600 text-white px-6 py-3 rounded-full font-semibold text-sm">
-                            STUDENT INTERNS
-                        </div>
-                    </div>
-                    
-                    <!-- Right: Search Bar -->
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                            </svg>
-                        </div>
-                        <input type="text" class="block w-80 pl-10 pr-3 py-3 border border-gray-300 rounded-full leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm" placeholder="Search interns...">
-                    </div>
-                </div>
+            <!-- Header -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                    CREATE NEW USER
+                </h1>
+                <p class="text-gray-600">Add a new user to the system</p>
             </div>
 
-            <!-- Table Section -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <!-- Table Headers -->
-                <div class="bg-gray-50 px-6 py-4">
-                    <div class="grid grid-cols-5 gap-4">
-                        <div class="bg-purple-600 text-white text-center py-3 px-4 rounded-full font-semibold text-sm">
-                            Name of Students
-                        </div>
-                        <div class="bg-purple-600 text-white text-center py-3 px-4 rounded-full font-semibold text-sm">
-                            Course
-                        </div>
-                        <div class="bg-purple-600 text-white text-center py-3 px-4 rounded-full font-semibold text-sm">
-                            Hours Completed
-                        </div>
-                        <div class="bg-purple-600 text-white text-center py-3 px-4 rounded-full font-semibold text-sm">
-                            Progress
-                        </div>
-                        <div class="bg-purple-600 text-white text-center py-3 px-4 rounded-full font-semibold text-sm">
-                            Status
-                        </div>
+            <!-- Create Intern Form -->
+            <div class="max-w-lg mx-auto bg-white p-8 rounded-xl shadow-lg">
+                @if(session('success'))
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+                        {{ session('success') }}
                     </div>
-                </div>
-
-                <!-- Table Body -->
-                <div class="divide-y divide-gray-200">
-                    <!-- Empty state - data will be added later -->
-                    <div class="px-6 py-12 text-center text-gray-500">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m3 5.197H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <h3 class="mt-2 text-sm font-medium text-gray-900">No students found</h3>
-                        <p class="mt-1 text-sm text-gray-500">Student data will be displayed here once added.</p>
+                @endif
+                @if($errors->any())
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                        <ul class="list-disc list-inside">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
-                </div>
+                @endif
+                <form method="POST" action="{{ route('coordinators.create-intern') }}">
+                    @csrf
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-bold text-gray-700 mb-2">Email</label>
+                        <input type="email" name="email" id="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="block text-sm font-bold text-gray-700 mb-2">Password</label>
+                        <input type="password" name="password" id="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    </div>
+                    <div class="mb-6">
+                        <label for="role" class="block text-sm font-bold text-gray-700 mb-2">Role</label>
+                        <select name="role" id="role" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white">
+                            <option value="">Select Role</option>
+                            <option value="student">Student</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-3 rounded-lg transition-colors">Create User</button>
+                </form>
             </div>
         </div>
     </div>
-
 </body>
 </html>
-
-
